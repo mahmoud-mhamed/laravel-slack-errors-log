@@ -4,7 +4,6 @@ namespace Mahmoudmhamed\LaravelSlackErrorsLog;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Mahmoudmhamed\LaravelSlackErrorsLog\Commands\LaravelSlackErrorsLogCommand;
 
 class LaravelSlackErrorsLogServiceProvider extends PackageServiceProvider
 {
@@ -14,6 +13,7 @@ class LaravelSlackErrorsLogServiceProvider extends PackageServiceProvider
             __DIR__.'/../config/slack-errors-log.php' => config_path('slack-errors-log.php'),
         ], 'laravel-slack-errors-log-config');
     }
+
     public function configurePackage(Package $package): void
     {
         /*

@@ -64,7 +64,6 @@ Previous Url: {$url->previous()}";
         return self::getLineString().$error_trace;
     }
 
-
     private static function getErrorHeader(): ?string
     {
         if (! config('slack-errors-log.log_header')) {
