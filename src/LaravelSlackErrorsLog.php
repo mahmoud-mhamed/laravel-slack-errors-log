@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 class LaravelSlackErrorsLog
 {
-    public static function sendSlackError(Throwable $exception): void
+    public static function sendSlackError(\TypeError $exception): void
     {
         if (App::isLocal() && ! config('slack-errors-log.log_error_in_local')) {
             return;
         }
         try {
-            Log::channel('slack')->error(self::getErrorHeader().self::getErrorContent($exception).self::getUrlData().self::getAuthData().self::getTraceBlock($exception));
+            Log::channel('slack')->error(self::getErrorHeader().self::getErrorContent($exception).self::getUrlData().self::appendMessage().self::getAuthData().self::getTraceBlock($exception));
         } catch (\Throwable  $e) {
             Log::error($e);
         }
@@ -52,18 +52,28 @@ Previous Url: {$url->previous()}";
         return null;
     }
 
-    private static function getTraceBlock(Throwable $exception): ?string
+    private static function appendMessage(): ?string
+    {
+        $append_message=config('slack-errors-log.append_message');
+        if ($append_message) {
+            return self::getLineString()."
+$append_message";
+        }
+        return null;
+    }
+
+    private static function getTraceBlock(\TypeError $exception): ?string
     {
         if (! config('slack-errors-log.log_trace')) {
             return null;
         }
         $trace_string = mb_substr($exception->getTraceAsString(), 0, 1000);
         $error_trace = "
-📌Trace : $trace_string";
+📌Trace
+$trace_string";
 
         return self::getLineString().$error_trace;
     }
-
 
     private static function getErrorHeader(): ?string
     {

@@ -29,13 +29,14 @@ return [
     'log_url' => env('SLACK_LOG_URL', true),
     'log_auth' => env('SLACK_LOG_AUTH', true),
     'log_trace' => env('SLACK_LOG_TRACE', false),
+    'append_message' => null,//string data append to slack log message
 ];
 ```
 
 
 ## Usage
 in .env file add
-LOG_SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
+LOG_SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
 
 in App\Exceptions\Handler.php in register function add
 ```php
