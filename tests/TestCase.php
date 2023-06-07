@@ -3,8 +3,8 @@
 namespace Mahmoudmhamed\LaravelSlackErrorsLog\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Mahmoudmhamed\LaravelSlackErrorsLog\LaravelSlackErrorsLogServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
