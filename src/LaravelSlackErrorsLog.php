@@ -22,16 +22,23 @@ class LaravelSlackErrorsLog
 
     private static function getAuthData(): ?string
     {
-        if (config('slack-errors-log.log_auth') && Auth::check()) {
-            $user = Auth::user();
-            $user_id = data_get($user, 'id');
-            $user_name = data_get($user, 'name');
-            $user_email = data_get($user, 'email');
+        if (config('slack-errors-log.log_auth')) {
+            $guards=array_keys(config('auth.guards'));
+            foreach ($guards as $guard) {
+                if (Auth::guard($guard)->check()) {
+                    $user = Auth::guard($guard)->user();
+                    $user_id = data_get($user, 'id');
+                    $user_name = data_get($user, 'name');
+                    $user_email = data_get($user, 'email');
 
-            return self::getLineString()."
-👹Auth Name: $user_name
-Auth Id: $user_id
-📧 Auth Email: $user_email";
+                    return self::getLineString() . "
+👹Auth Data
+Name: $user_name
+Id: $user_id
+Guard: $guard
+📧 Email: $user_email";
+                }
+            }
         }
 
         return null;
