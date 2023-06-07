@@ -9,5 +9,5 @@ return [
     'log_url' => env('SLACK_LOG_URL', true),
     'log_auth' => env('SLACK_LOG_AUTH', true),
     'log_trace' => env('SLACK_LOG_TRACE', false),
-    'append_message' => null,//string data append to slack log message
+    'append_message' => null, //string data append to slack log message
 ];

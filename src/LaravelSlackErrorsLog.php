@@ -61,11 +61,12 @@ Previous Url: {$url->previous()}";
 
     private static function appendMessage(): ?string
     {
-        $append_message=config('slack-errors-log.append_message');
+        $append_message = config('slack-errors-log.append_message');
         if ($append_message) {
             return self::getLineString()."
 $append_message";
         }
+
         return null;
     }
 
@@ -74,7 +75,7 @@ $append_message";
         if (! config('slack-errors-log.log_trace')) {
             return null;
         }
-        $trace_string = method_exists($exception, 'getTraceAsString')?mb_substr($exception->getTraceAsString(), 0, 1000):'';
+        $trace_string = method_exists($exception, 'getTraceAsString') ? mb_substr($exception->getTraceAsString(), 0, 1000) : '';
         $error_trace = "
 📌Trace
 $trace_string";
@@ -102,9 +103,9 @@ $trace_string";
         if (config('slack-errors-log.content')) {
             $message = config('slack-errors-log.content');
         } else {
-            $el_message=method_exists($exception, 'getMessage')?$exception->getMessage():'';
-            $el_file=method_exists($exception, 'getFile')?$exception->getFile():'';
-            $el_line=method_exists($exception, 'getLine')?$exception->getLine():'';
+            $el_message = method_exists($exception, 'getMessage') ? $exception->getMessage() : '';
+            $el_file = method_exists($exception, 'getFile') ? $exception->getFile() : '';
+            $el_line = method_exists($exception, 'getLine') ? $exception->getLine() : '';
             $message = "
 💩{$el_message}
 📂{$el_file} line {$el_line}";
