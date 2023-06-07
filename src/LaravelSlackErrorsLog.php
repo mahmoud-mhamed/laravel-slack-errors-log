@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class LaravelSlackErrorsLog
 {
-    public static function sendSlackError(\TypeError $exception): void
+    public static function sendSlackError($exception): void
     {
         if (App::isLocal() && ! config('slack-errors-log.log_error_in_local')) {
             return;
@@ -62,12 +62,12 @@ $append_message";
         return null;
     }
 
-    private static function getTraceBlock(\TypeError $exception): ?string
+    private static function getTraceBlock($exception): ?string
     {
         if (! config('slack-errors-log.log_trace')) {
             return null;
         }
-        $trace_string = mb_substr($exception->getTraceAsString(), 0, 1000);
+        $trace_string = method_exists($exception, 'getTraceAsString')?mb_substr($exception->getTraceAsString(), 0, 1000):'';
         $error_trace = "
 📌Trace
 $trace_string";
@@ -95,9 +95,12 @@ $trace_string";
         if (config('slack-errors-log.content')) {
             $message = config('slack-errors-log.content');
         } else {
+            $el_message=method_exists($exception, 'getMessage')?$exception->getMessage():'';
+            $el_file=method_exists($exception, 'getFile')?$exception->getFile():'';
+            $el_line=method_exists($exception, 'getLine')?$exception->getLine():'';
             $message = "
-💩{$exception->getMessage()}
-📂{$exception->getFile()} line {$exception->getLine()}";
+💩{$el_message}
+📂{$el_file} line {$el_line}";
         }
 
         return self::getLineString().$message;
