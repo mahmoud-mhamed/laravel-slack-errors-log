@@ -43,7 +43,7 @@ in App\Exceptions\Handler.php in register function add
 use Mahmoudmhamed\LaravelSlackErrorsLog\LaravelSlackErrorsLog;
 
 $this->reportable(function (Throwable $e) {
-    LaravelErrorsErrorsLog::sendSlackErrror($e);
+     LaravelSlackErrorsLog::sendSlackError($e);
 });
 ```
 
