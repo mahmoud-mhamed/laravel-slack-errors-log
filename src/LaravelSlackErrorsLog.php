@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 class LaravelSlackErrorsLog
 {
-    public static function sendSlackError($exception): void
+    public static function sendSlackError($exception,$append_in_run_time_message=null): void
     {
         if (App::isLocal() && ! config('slack-errors-log.log_error_in_local')) {
             return;
         }
         try {
-            Log::channel('slack')->error(self::getErrorHeader().self::getErrorContent($exception).self::getUrlData().self::appendMessage().self::getAuthData().self::getTraceBlock($exception));
+            Log::channel('slack')->error(self::getErrorHeader().self::getErrorContent($exception).self::getUrlData().self::appendMessage().self::appendInRunTimeMessage($append_in_run_time_message).self::getAuthData().self::getTraceBlock($exception));
         } catch (\Throwable  $e) {
             Log::error($e);
         }
@@ -62,6 +62,15 @@ Previous Url: {$url->previous()}";
     private static function appendMessage(): ?string
     {
         $append_message = config('slack-errors-log.append_message');
+        if ($append_message) {
+            return self::getLineString()."
+$append_message";
+        }
+
+        return null;
+    }
+    private static function appendInRunTimeMessage($append_message=null): ?string
+    {
         if ($append_message) {
             return self::getLineString()."
 $append_message";
