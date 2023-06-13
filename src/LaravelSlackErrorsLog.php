@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class LaravelSlackErrorsLog
 {
-    public static function sendSlackError($exception,$append_in_run_time_message=null): void
+    public static function sendSlackError($exception, $append_in_run_time_message = null): void
     {
         if (App::isLocal() && ! config('slack-errors-log.log_error_in_local')) {
             return;
@@ -23,7 +23,7 @@ class LaravelSlackErrorsLog
     private static function getAuthData(): ?string
     {
         if (config('slack-errors-log.log_auth')) {
-            $guards=array_keys(config('auth.guards'));
+            $guards = array_keys(config('auth.guards'));
             foreach ($guards as $guard) {
                 if (Auth::guard($guard)->check()) {
                     $user = Auth::guard($guard)->user();
@@ -31,7 +31,7 @@ class LaravelSlackErrorsLog
                     $user_name = data_get($user, 'name');
                     $user_email = data_get($user, 'email');
 
-                    return self::getLineString() . "
+                    return self::getLineString()."
 👹Auth Data
 Name: $user_name
 Id: $user_id
@@ -69,7 +69,8 @@ $append_message";
 
         return null;
     }
-    private static function appendInRunTimeMessage($append_message=null): ?string
+
+    private static function appendInRunTimeMessage($append_message = null): ?string
     {
         if ($append_message) {
             return self::getLineString()."
