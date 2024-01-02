@@ -33,6 +33,8 @@ return [
 ];
 ```
 
+## Create New Webhook URL
+to create webhook read doc in https://api.slack.com/messaging/webhooks 
 
 ## Usage
 in .env file add
