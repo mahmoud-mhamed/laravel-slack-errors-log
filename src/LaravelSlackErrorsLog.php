@@ -10,11 +10,11 @@ class LaravelSlackErrorsLog
 {
     public static function sendSlackError($exception, $append_in_run_time_message = null): void
     {
-        if (App::isLocal() && !config('slack-errors-log.log_error_in_local')) {
+        if (App::isLocal() && ! config('slack-errors-log.log_error_in_local')) {
             return;
         }
         try {
-            Log::channel('slack')->error(self::getErrorHeader() . self::getErrorContent($exception) . self::getUrlData() . self::appendMessage() . self::appendInRunTimeMessage($append_in_run_time_message) . self::getAuthData() . self::getTraceBlock($exception));
+            Log::channel('slack')->error(self::getErrorHeader().self::getErrorContent($exception).self::getUrlData().self::appendMessage().self::appendInRunTimeMessage($append_in_run_time_message).self::getAuthData().self::getTraceBlock($exception));
         } catch (\Throwable  $e) {
             Log::error($e);
         }
@@ -30,7 +30,7 @@ class LaravelSlackErrorsLog
                 $user_name = data_get($user, 'name');
                 $user_email = data_get($user, 'email');
 
-                return self::getLineString() . "
+                return self::getLineString()."
 👹Auth Data
 Name: $user_name
 Id: $user_id
@@ -38,6 +38,7 @@ Guard: $guard
 📧 Email: $user_email";
             }
         }
+
         return null;
     }
 
@@ -46,20 +47,20 @@ Guard: $guard
         $request = request();
         $url = url();
 
-        return self::getLineString() . "
+        return self::getLineString()."
 URL: {$request->fullUrl()}
 IP: {$request->ip()}
 Previous Url: {$url->previous()}
 user_agent : {$request->header('User-Agent')},
 referrer : {$request->header('referer')},
 request_data : ".json_encode($request->all());
-}
+    }
 
     private static function appendMessage(): ?string
     {
         $append_message = config('slack-errors-log.append_message');
         if ($append_message) {
-            return self::getLineString() . "
+            return self::getLineString()."
 $append_message";
         }
 
@@ -69,7 +70,7 @@ $append_message";
     private static function appendInRunTimeMessage($append_message = null): ?string
     {
         if ($append_message) {
-            return self::getLineString() . "
+            return self::getLineString()."
 $append_message";
         }
 
@@ -78,7 +79,7 @@ $append_message";
 
     private static function getTraceBlock($exception): ?string
     {
-        if (!config('slack-errors-log.log_trace')) {
+        if (! config('slack-errors-log.log_trace')) {
             return null;
         }
         $trace_string = method_exists($exception, 'getTraceAsString') ? mb_substr($exception->getTraceAsString(), 0, 1000) : '';
@@ -86,7 +87,7 @@ $append_message";
 📌Trace
 $trace_string";
 
-        return self::getLineString() . $error_trace;
+        return self::getLineString().$error_trace;
     }
 
     private static function getErrorHeader(): ?string
@@ -95,12 +96,12 @@ $trace_string";
             return config('slack-errors-log.header_title');
         }
 
-        return '🚨 ' . env('APP_NAME') . ' Exception Occurred!';
+        return '🚨 '.env('APP_NAME').' Exception Occurred!';
     }
 
     private static function getErrorContent($exception): ?string
     {
-        if (!config('slack-errors-log.log_content')) {
+        if (! config('slack-errors-log.log_content')) {
             return null;
         }
         if (config('slack-errors-log.content')) {
@@ -114,7 +115,7 @@ $trace_string";
 📂{$el_file} line {$el_line}";
         }
 
-        return self::getLineString() . $message;
+        return self::getLineString().$message;
 
     }
 
